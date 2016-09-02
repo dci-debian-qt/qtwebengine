@@ -1,0 +1,26 @@
+From 1c96e5baa558fbb3dfd3228b054e20c0765cae4c Mon Sep 17 00:00:00 2001
+From: Akihiko Odaki <akihiko.odaki.4i@stu.hosei.ac.jp>
+Date: Tue, 31 May 2016 13:36:43 +0900
+Subject: [PATCH] Allow to set arm_thumb=0 with -marm
+
+In case arm_version == 7, arm_thumb used by default.
+This change allows to override the configuration.
+
+Change-Id: Ifa924d3d6b6c39da513523fdc40757d277fb7f26
+Reviewed-by: Allan Sandfeld Jensen <allan.jensen@qt.io>
+---
+ src/core/gyp_run.pro | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/core/gyp_run.pro b/src/core/gyp_run.pro
+index 9748cc7..767bd6a 100644
+--- a/src/core/gyp_run.pro
++++ b/src/core/gyp_run.pro
+@@ -81,6 +81,7 @@ contains(QT_ARCH, "arm") {
+         else: GYP_CONFIG += arm_fpu=\"$$MFPU\" arm_neon=0 arm_neon_optional=0
+     }
+ 
++    contains(QMAKE_CFLAGS, "-marm"): GYP_CONFIG += arm_thumb=0
+     contains(QMAKE_CFLAGS, "-mthumb"): GYP_CONFIG += arm_thumb=1
+ }
+ 
