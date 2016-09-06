@@ -1,0 +1,31 @@
+From a9d40528a30053f43d10ac38165dfc6b0108fbf8 Mon Sep 17 00:00:00 2001
+From: Allan Sandfeld Jensen <allan.jensen@theqtcompany.com>
+Date: Tue, 6 Sep 2016 15:27:50 +0200
+Subject: [PATCH] Do not assume neon on armv7
+
+Chromium defaults to arm_neon=1 and then sets -mfpu=neon if the arm
+architecture is 7.
+
+Change-Id: Ib144dd4188ba4221ed35367026de9f9a04c69792
+---
+ src/core/gyp_run.pro | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/core/gyp_run.pro b/src/core/gyp_run.pro
+index 885df90..ee62e5d 100644
+--- a/src/core/gyp_run.pro
++++ b/src/core/gyp_run.pro
+@@ -79,6 +79,10 @@ contains(QT_ARCH, "arm") {
+         contains(MFPU, "neon")|contains(MFPU, "neon-vfpv4"): GYP_CONFIG += arm_fpu=\"$$MFPU\" arm_neon=1
+         else:!lessThan(MARMV, 7): GYP_CONFIG += arm_neon=0 arm_neon_optional=1
+         else: GYP_CONFIG += arm_fpu=\"$$MFPU\" arm_neon=0 arm_neon_optional=0
++    } else {
++        # Chromium defaults to arm_neon=1, Qt does not.
++        GYP_CONFIG += arm_neon=0
++        !lessThan(MARMV, 7): GYP_CONFIG += arm_neon_optional=1
+     }
+ 
+     contains(QMAKE_CFLAGS, "-marm"): GYP_CONFIG += arm_thumb=0
+-- 
+2.7.4
+
