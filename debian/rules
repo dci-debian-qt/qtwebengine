@@ -59,11 +59,6 @@ else
 	echo "QMAKE_CXXFLAGS -= -gstabs" >> .qmake.conf
 endif
 
-# Disable thumb on ARM v7 since ffmpeg doesn't support it
-ifeq ($(DEB_HOST_ARCH), armhf)
-	echo "QMAKE_CFLAGS = -marm" >> .qmake.conf
-endif
-
 # Disable JIT on selected architectures
 ifeq ($(DEB_HOST_ARCH),$(findstring $(DEB_HOST_ARCH), $(disabled_jit_architectures)))
 	echo "QMAKE_CXXFLAGS += -DENABLE_JIT=0" >> .qmake.conf
