@@ -65,8 +65,8 @@ ifeq ($(DEB_HOST_ARCH),$(findstring $(DEB_HOST_ARCH), $(disabled_jit_architectur
 endif
 
 ifeq ($(DEB_HOST_ARCH), $(findstring $(DEB_HOST_ARCH), armhf))
-	export LDFLAGS += -Wl,--reduce-memory-overheads
-	export LDFLAGS += -Wl,--no-keep-memory
+	echo "QMAKE_LFLAGS += -Wl,--reduce-memory-overheads" >> .qmake.conf
+	echo "QMAKE_LFLAGS += -Wl,--no-keep-memory" >> .qmake.conf
 endif
 
 # Disable header precompliation as it creates invalid includes on certain
