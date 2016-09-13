@@ -64,6 +64,11 @@ ifeq ($(DEB_HOST_ARCH),$(findstring $(DEB_HOST_ARCH), $(disabled_jit_architectur
 	echo "QMAKE_CXXFLAGS += -DENABLE_JIT=0" >> .qmake.conf
 endif
 
+ifeq ($(DEB_HOST_ARCH), $(findstring $(DEB_HOST_ARCH), armhf))
+	export LDFLAGS += -Wl,--reduce-memory-overheads
+	export LDFLAGS += -Wl,--no-keep-memory
+endif
+
 # Disable header precompliation as it creates invalid includes on certain
 # architectures causing build failure. LP: 1395661
 ifeq ($(DEB_HOST_ARCH),$(findstring $(DEB_HOST_ARCH), $(disabled_pch_architectures)))
