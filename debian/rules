@@ -9,42 +9,71 @@ export CXXFLAGS := $(shell dpkg-buildflags --get CXXFLAGS) $(shell dpkg-buildfla
 export LDFLAGS := $(shell dpkg-buildflags --get LDFLAGS) -Wl,--as-needed
 export QT_SELECT := qt5
 
+VERSION_CLEAN_UPSTREAM = $(call dpkg_late_eval,VERSION_CLEAN_UPSTREAM,echo '$(DEB_VERSION_UPSTREAM)' | sed -e 's/\(~\|+\).*//')
+
 DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
-gstab_architectures := amd64 i386 powerpc s390x armhf
-fulldebug_architectures := none
+gstab_architectures :=
+fulldebug_architectures :=
 disabled_jit_architectures := armel mips mipsel
 disabled_pch_architectures := amd64 powerpc s390x
 
-defines+=use_system_re2=1 \
-         use_system_yasm=1 \
-         use_system_opus=1 \
-         use_system_zlib=1 \
-         use_system_speex=1 \
-         use_system_expat=1 \
-         use_system_libpng=1 \
-         use_system_libxml=1 \
-         use_system_libusb=1 \
-         use_system_libjpeg=1 \
-         use_system_libwebp=1 \
-         use_system_libxslt=1 \
+defines+=use_system_expat=1 \
+         use_system_ffmpeg=1 \
+         use_system_flac=1 \
+         use_system_harfbuzz=1 \
          use_system_jsoncpp=1 \
          use_system_libevent=1 \
-         use_system_harfbuzz=1 \
-         use_system_xdg_utils=1 \
-         use_system_icu \
-         use_system_protobuf \
-         use_system_sqlite \
+         use_system_libjpeg=1 \
+         use_system_libpng=1 \
+         use_system_libusb=1 \
+         use_system_libwebp=1 \
+         use_system_libxml=1 \
+         use_system_libxslt=1 \
+         use_system_opus=1 \
+         use_system_re2=1 \
+         use_system_snappy=1 \
+         use_system_speex=1 \
          use_system_v8 \
-         use_system_ffmpeg \
+         use_system_xdg_utils=1 \
+         use_system_yasm=1 \
+         use_system_zlib=1 \
+         use_system_protobuf
+         # use_system_libxnvctrl=1 \
+         # use_system_sqlite=1 \
+         # use_system_libvpx=1 \
+         # use_system_icu=1 \
+
+replace_gyp_args = $(foreach define,$(defines),-D$(define))
+
+touch_files = src/3rdparty/chromium/third_party/analytics/google-analytics-bundle.js \
+	      src/3rdparty/chromium/third_party/WebKit/Source/devtools/front_end/acorn/acorn.js \
+	      src/3rdparty/chromium/third_party/WebKit/Source/devtools/front_end/diff/diff_match_patch.js \
+	      src/3rdparty/chromium/third_party/web-animations-js/sources/web-animations.min.js \
+	      src/3rdparty/chromium/third_party/web-animations-js/sources/web-animations-next.min.js \
+	      src/3rdparty/chromium/third_party/web-animations-js/sources/web-animations-next-lite.min.js
 
 %:
-	dh $@ --parallel --dbg-package=libqt5webengine5-dbg --with pkgkde_symbolshelper
+	dh $@ --with pkgkde_symbolshelper
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -rf $(CURDIR)/test_root
+	rm -rf $(CURDIR)/docs
+	rm -rf $(CURDIR)/.local
+	rm -rf $(CURDIR)/src/3rdparty/chromium/third_party/jstemplate/jstemplate_compiled.js
+	rm -rf $(CURDIR)/examples/webenginewidgets/contentmanipulation/jquery*.js
+	rm -rf $(CURDIR)/examples/webenginewidgets/markdowneditor/resources/marked*.js
+	
+	for fname in $(touch_files); do \
+		rm -rf $(CURDIR)/$${fname}; \
+	done
 
 override_dh_auto_configure:
+	src/3rdparty/chromium/build/linux/unbundle/replace_gyp_files.py $(replace_gyp_args)
 	# Run qmake once to create .qmake.conf and be sure to append the following values.
-	qmake WEBENGINE_CONFIG+="$(defines)"
+	qmake WEBENGINE_CONFIG+="$(defines)" QT_BUILD_PARTS+=" tests"
 
 # Enable gstabs debugging symbols only on gstab_architectures.
 ifeq ($(DEB_HOST_ARCH),$(findstring $(DEB_HOST_ARCH), $(gstab_architectures)))
@@ -52,11 +81,17 @@ ifeq ($(DEB_HOST_ARCH),$(findstring $(DEB_HOST_ARCH), $(gstab_architectures)))
 	echo "QMAKE_CXXFLAGS += -gstabs" >> .qmake.conf
 # Enable normal debugging symbols only on fulldebug_architectures.
 else ifeq ($(DEB_HOST_ARCH),$(findstring $(DEB_HOST_ARCH), $(fulldebug_architectures)))
-	echo "QMAKE_CXXFLAGS += -g" >> .qmake.conf
+	echo "QMAKE_CXXFLAGS_DEBUG += -fdebug-types-section" >> .qmake.conf
+	echo "QMAKE_CXXFLAGS += -fdebug-types-section" >> .qmake.conf
+	echo "QMAKE_CXXFLAGS_RELEASE_WITH_DEBUGINFO += -fdebug-types-section" >> .qmake.conf
+	echo "QMAKE_CXXFLAGS_RELEASE += -fdebug-types-section" >> .qmake.conf
+	echo "QMAKE_LFLAGS += -fdebug-types-section" >> .qmake.conf
 else
 # Disable debugging symbols in all the other archs.
 	echo "QMAKE_CXXFLAGS -= -g" >> .qmake.conf
 	echo "QMAKE_CXXFLAGS -= -gstabs" >> .qmake.conf
+	echo "QT_CONFIG -= force_debug_info" >> .qmake.conf
+	echo "QT_CONFIG -= separate_debug_info" >> .qmake.conf
 endif
 
 # Disable JIT on selected architectures
@@ -74,17 +109,36 @@ ifeq ($(DEB_HOST_ARCH),$(findstring $(DEB_HOST_ARCH), $(disabled_pch_architectur
 	echo "CONFIG -= precompile_header" >> .qmake.conf
 endif
 
-	# Run qmake again now with the proper values.
-	qmake  WEBENGINE_CONFIG+="$(defines)"
+	# Make ld not cache the symbol tables of input files in memory to avoid memory exhaustion during the linking phase.
+	echo "QMAKE_LFLAGS += -Wl,--no-keep-memory" >> .qmake.conf
 
-	# Upstream 5.6.0 RC tarball was generated improperly and has no synced headers
-	/usr/lib/$(DEB_HOST_MULTIARCH)/qt5/bin/syncqt.pl Source -version $(DEB_VERSION_UPSTREAM)
+	# Run qmake again now with the proper values.
+	qmake  WEBENGINE_CONFIG+="$(defines)" QT_BUILD_PARTS+=" tests"
+
+override_dh_auto_build-arch:
+	cd $(CURDIR)/src/3rdparty/chromium/third_party/jstemplate/; \
+		closure-compiler --compilation_level ADVANCED_OPTIMIZATIONS \
+		--js util.js \
+		--js jsevalcontext.js \
+		--js jstemplate.js \
+		--js exports.js \
+		--js_output_file jstemplate_compiled.js
+	
+	>examples/webenginewidgets/contentmanipulation/jquery.js cat debian/missing-sources/jquery-*.js
+	yui-compressor --type js "examples/webenginewidgets/contentmanipulation/jquery.js" -o "examples/webenginewidgets/contentmanipulation/jquery.min.js"
+	>examples/webenginewidgets/markdowneditor/resources/marked.js tar xaf debian/missing-sources/marked*.tar.gz --wildcards --to-stdout '*/marked.js'
+	yui-compressor --type js "examples/webenginewidgets/markdowneditor/resources/marked.js" -o "examples/webenginewidgets/markdowneditor/resources/marked.min.js"
+	
+	for fname in $(touch_files); do \
+		touch $(CURDIR)/$${fname}; \
+	done
+
+	dh_auto_build
 
 override_dh_auto_build-indep:
 	dh_auto_build -- docs
 
 override_dh_auto_install-arch:
-	#make install INSTALL_ROOT=$(CURDIR)/debian/tmp
 	dh_auto_install
 	
 	# Remove rpath from the offending binaries
@@ -95,16 +149,16 @@ override_dh_auto_install-arch:
 	-exec sed -i -e 's/$(DEB_HOST_MULTIARCH)\/$(DEB_HOST_MULTIARCH)/$(DEB_HOST_MULTIARCH)/g' {} \;
 	
 	# Remove private headers
-	rm -rfv debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/qt5/QtWebEngine/*/QtQtWebEngine
-	rm -rfv debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/qt5/QtWebEngineCore/*/QtQtWebEngineCore
-	rm -rfv debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/qt5/QtWebEngineWidgets/*/QtWebEngineWidgets
+	rm -rfv debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/qt5/QtWebEngine/${VERSION_CLEAN_UPSTREAM}
+	rm -rfv debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/qt5/QtWebEngineCore/${VERSION_CLEAN_UPSTREAM}
+	rm -rfv debian/tmp/usr/include/$(DEB_HOST_MULTIARCH)/qt5/QtWebEngineWidgets/${VERSION_CLEAN_UPSTREAM}
 	# And associated files
 	rm -fv debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/qt5/mkspecs/modules/qt_lib_webengine_private.pri
 	rm -fv debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/qt5/mkspecs/modules/qt_lib_webenginecore_private.pri
 	rm -fv debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/qt5/mkspecs/modules/qt_lib_webenginecoreheaders_private.pri
 	rm -fv debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/qt5/mkspecs/modules/qt_lib_webenginewidgets_private.pri
 	
-	# Remove libtool-like fileEngines
+	# Remove libtool-like files
 	rm -fv debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/*.la
 
 override_dh_auto_install-indep:
@@ -113,5 +167,21 @@ override_dh_auto_install-indep:
 override_dh_install:
 	dh_install --fail-missing
 
-#override_dh_auto_test:
+override_dh_link:
+	dh_link --package=qt5webengine-examples \
+		usr/share/javascript/jquery/jquery.min.js usr/lib/$(DEB_HOST_MULTIARCH)/qt5/examples/webenginewidgets/contentmanipulation/jquery.min.js \
+		usr/share/javascript/marked/marked.min.js usr/lib/$(DEB_HOST_MULTIARCH)/qt5/examples/webenginewidgets/markdowneditor/resources/marked.min.js
+	
+	dh_link --remaining-packages
+
+override_dh_auto_test-arch:
+	$(MAKE) install -Csrc/core INSTALL_ROOT=$(CURDIR)/test_root
+	-xvfb-run -a \
+		-s "-screen 0 1024x768x24 +extension RANDR +extension RENDER +extension GLX" \
+		dh_auto_test --no-parallel -- -k \
+		QML2_IMPORT_PATH=$(CURDIR)/test_root/usr/lib/$(DEB_HOST_MULTIARCH)/qt5/qml \
+		LD_LIBRARY_PATH=$(CURDIR)/lib \
+		HOME=$(CURDIR)
+
+override_dh_auto_test-indep:
 	# Do not attempt to run anything to make build-indep work
