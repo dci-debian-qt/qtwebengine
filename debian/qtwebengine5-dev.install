@@ -19,4 +19,3 @@ usr/lib/*/pkgconfig/Qt5WebEngineWidgets.pc
 usr/lib/*/qt5/mkspecs/modules/qt_lib_webengine.pri
 usr/lib/*/qt5/mkspecs/modules/qt_lib_webenginecore.pri
 usr/lib/*/qt5/mkspecs/modules/qt_lib_webenginewidgets.pri
-usr/share/qt5/resources/qtwebengine_devtools_resources.pak
