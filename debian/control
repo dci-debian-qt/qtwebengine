@@ -106,8 +106,7 @@ Package: libqt5webengine5-dev
 Architecture: all
 Multi-Arch: foreign
 Section: oldlibs
-Depends: qtwebengine5-dev,
-         ${misc:Depends}
+Depends: qtwebengine5-dev, ${misc:Depends}
 Description: Web content engine library for Qt - transitional
  QtWebEngine provides a Web browser engine that makes it easy to embed content
  from the World Wide Web into your Qt application.
@@ -188,7 +187,7 @@ Multi-Arch: same
 Depends: libjs-jquery, libjs-marked, ${misc:Depends}, ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Replaces: qt5webengine-examples (<< 5.7.1)
-Breaks:  qt5webengine-examples (<< 5.7.1)
+Breaks: qt5webengine-examples (<< 5.7.1)
 Description: Qt WebEngine - Examples
  QtWebEngine provides a Web browser engine that makes it easy to embed content
  from the World Wide Web into your Qt application.
