@@ -64,13 +64,13 @@ override_dh_auto_clean:
 	rm -rf $(CURDIR)/src/3rdparty/chromium/third_party/jstemplate/jstemplate_compiled.js
 	rm -rf $(CURDIR)/examples/webenginewidgets/contentmanipulation/jquery*.js
 	rm -rf $(CURDIR)/examples/webenginewidgets/markdowneditor/resources/marked*.js
-	
+
 	for fname in $(touch_files); do \
 		rm -rf $(CURDIR)/$${fname}; \
 	done
 
 override_dh_auto_configure:
-	src/3rdparty/chromium/build/linux/unbundle/replace_gyp_files.py $(replace_gyp_args)
+	#src/3rdparty/chromium/build/linux/unbundle/replace_gyp_files.py $(replace_gyp_args)
 	# Run qmake once to create .qmake.conf and be sure to append the following values.
 	qmake WEBENGINE_CONFIG+="$(defines)" QT_BUILD_PARTS+=" tests"
 
@@ -122,12 +122,12 @@ override_dh_auto_build-arch:
 		--js jstemplate.js \
 		--js exports.js \
 		--js_output_file jstemplate_compiled.js
-	
+
 	>examples/webenginewidgets/contentmanipulation/jquery.js cat debian/missing-sources/jquery-*.js
 	yui-compressor --type js "examples/webenginewidgets/contentmanipulation/jquery.js" -o "examples/webenginewidgets/contentmanipulation/jquery.min.js"
 	>examples/webenginewidgets/markdowneditor/resources/marked.js tar xaf debian/missing-sources/marked*.tar.gz --wildcards --to-stdout '*/marked.js'
 	yui-compressor --type js "examples/webenginewidgets/markdowneditor/resources/marked.js" -o "examples/webenginewidgets/markdowneditor/resources/marked.min.js"
-	
+
 	for fname in $(touch_files); do \
 		touch $(CURDIR)/$${fname}; \
 	done
@@ -139,14 +139,14 @@ override_dh_auto_build-indep:
 
 override_dh_auto_install-arch:
 	dh_auto_install
-	
+
 	# Remove rpath from the offending binaries
 	chrpath -d $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/qt5/libexec/QtWebEngineProcess
-	
+
 	# Fix wrong path in pkgconfig files
 	find $(CURDIR)/debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig -type f -name '*.pc' \
 	-exec sed -i -e 's/$(DEB_HOST_MULTIARCH)\/$(DEB_HOST_MULTIARCH)/$(DEB_HOST_MULTIARCH)/g' {} \;
-	
+
 	# Remove libtool-like files
 	rm -fv debian/tmp/usr/lib/$(DEB_HOST_MULTIARCH)/*.la
 
@@ -160,7 +160,7 @@ override_dh_link:
 	dh_link --package=qt5webengine-examples \
 		usr/share/javascript/jquery/jquery.min.js usr/lib/$(DEB_HOST_MULTIARCH)/qt5/examples/webenginewidgets/contentmanipulation/jquery.min.js \
 		usr/share/javascript/marked/marked.min.js usr/lib/$(DEB_HOST_MULTIARCH)/qt5/examples/webenginewidgets/markdowneditor/resources/marked.min.js
-	
+
 	dh_link --remaining-packages
 
 override_dh_auto_test-arch:
