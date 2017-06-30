@@ -1,8 +1,75 @@
-qtwebengine-opensource-src (5.9.0+dfsg-0neon) UNRELEASED; urgency=medium
+qtwebengine-opensource-src (5.9.0+dfsg-1) UNRELEASED; urgency=medium
 
-  * New release
+  [ Sandro Knauß ]
+  * do not use gold linker for small archs
+  * Bump Standards-Version:
+    - add Recommends to doc package for dev package
+    - MPL-1.0 and MPL-2.0 are now in common-licenses
+  * replace mocha.js with a missing-source tarball
+  * Check missing-source tarballs (one new occurence found)
+  * Update short desciption of packages to make them unique.
+  * Update lintian-overrides
+  * Update Excluded-File list
+  * Clean qmake caches in clean step
 
- -- Jonathan Riddell <jr@jriddell.org>  Mon, 05 Jun 2017 17:17:19 +0100
+  [ Simon Quigley ]
+  * New upstream release. (Closes: #865273)
+  * Fix debian/watch so it isn't hardcoded to 5.7.1.
+  * Refresh add_mips_support.patch.
+  * Add patch disabling last_commit_position as our tarballs are not Git
+    repositories.
+
+  [ Jonathan Riddell ]
+  * New package qtwebengine5-private-dev for private headers used by
+    QtWebView
+
+  [ Alexander Volkov ]
+  * Add yasm to Build-Depends
+  * New package qtwebengine5-dev-tools for tools used by examples
+
+ -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Fri, 16 Jun 2017 16:54:53 +0100
+
+qtwebengine-opensource-src (5.7.1+dfsg-6.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Build with -g1 instead of -g on 32bit architectures.
+    (Closes: #863927)
+
+ -- Adrian Bunk <bunk@debian.org>  Mon, 05 Jun 2017 16:16:54 +0300
+
+qtwebengine-opensource-src (5.7.1+dfsg-6) unstable; urgency=medium
+
+  [ Sandro Knauß ]
+  * Make it buildable on small archs again.
+
+ -- Sandro Knauß <hefee@debian.org>  Wed, 18 Jan 2017 19:08:01 +0100
+
+qtwebengine-opensource-src (5.7.1+dfsg-5) unstable; urgency=medium
+
+  [ Sandro Knauß ]
+  * Fix "h.264 video does not seem to work" (Closes: #851170)
+    - Add use_proprietary_codecs to defines, to be able to use ffmpeg and h264
+  * Add -Wl,-z,now to LFAGS, to make build full hardened
+  * Add Build-Deps ninja-build
+  * make build be less ram consuming on armhf and mipsel
+
+ -- Sandro Knauß <hefee@debian.org>  Wed, 18 Jan 2017 13:04:01 +0100
+
+qtwebengine-opensource-src (5.7.1+dfsg-4) unstable; urgency=medium
+
+  [ Sandro Knauß ]
+  * Move QtWebEngineProcess to libqt5webenginecore5
+  * Make arch+indep build sucessfull too.
+  * Mark gold compiler symbols as optional
+
+ -- Sandro Knauß <hefee@debian.org>  Wed, 11 Jan 2017 13:16:55 +0100
+
+qtwebengine-opensource-src (5.7.1+dfsg-3) unstable; urgency=medium
+
+  * Make arch=all build successfully (Closes: #849794)
+  * Release to unstable, to get bugs fixed.
+
+ -- Sandro Knauß <hefee@debian.org>  Sun, 08 Jan 2017 20:53:35 +0100
 
 qtwebengine-opensource-src (5.7.1+dfsg-2) experimental; urgency=medium
 

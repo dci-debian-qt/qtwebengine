@@ -13,6 +13,8 @@ Build-Depends: autotools-dev,
                dh-autoreconf,
                flex,
                gperf,
+               yasm [amd64 i386],
+               ninja-build,
                khronos-api,
                libasound2-dev [linux-any],
                libavcodec-dev,
@@ -42,10 +44,10 @@ Build-Depends: autotools-dev,
                libpng-dev,
                libprotobuf-dev,
                libpulse-dev,
-               libqt5opengl5-dev (>= 5.7.1~20161021~),
-               libqt5webchannel5-dev (>= 5.7.1~20161021~),
-               libqt5xmlpatterns5-dev (>= 5.7.1~20161021~),
-               libre2-dev,
+               libqt5opengl5-dev (>= 5.9.0~),
+               libqt5webchannel5-dev (>= 5.9.0~),
+               libqt5xmlpatterns5-dev (>= 5.9.0~),
+               libre2-dev (>= 20161101+dfsg-2),
                libsnappy-dev,
                libsqlite3-dev,
                libsrtp-dev,
@@ -67,19 +69,19 @@ Build-Depends: autotools-dev,
                pkg-kde-tools,
                protobuf-compiler,
                python,
-               qtbase5-private-dev (>= 5.7.1~20161021~),
-               qtdeclarative5-private-dev (>= 5.7.1~20161021~),
+               qtbase5-private-dev (>= 5.9.0~),
+               qtdeclarative5-private-dev (>= 5.9.0~),
                qtlocation5-dev,
-               qtscript5-private-dev (>= 5.7.1~20161021~),
+               qtscript5-private-dev (>= 5.9.0~),
                re2c,
                ruby,
                xauth,
                xvfb,
                yui-compressor
-Build-Depends-Indep: libqt5sql5-sqlite (>= 5.7.1~20161021~),
-                     qtbase5-doc-html (>= 5.7.1~20161021~),
-                     qttools5-dev-tools (>= 5.7.1~20161021~)
-Standards-Version: 3.9.8
+Build-Depends-Indep: libqt5sql5-sqlite (>= 5.9.0~),
+                     qtbase5-doc-html (>= 5.9.0~),
+                     qttools5-dev-tools (>= 5.9.0~)
+Standards-Version: 4.0.0
 Vcs-Browser: https://anonscm.debian.org/git/pkg-kde/qt/qtwebengine.git
 Vcs-Git: https://anonscm.debian.org/git/pkg-kde/qt/qtwebengine.git
 Homepage: https://doc.qt.io/qt-5/qtwebengine-index.html
@@ -95,6 +97,7 @@ Depends: libqt5webchannel5-dev,
          qtbase5-dev,
          qtdeclarative5-dev,
          ${misc:Depends}
+Recommends: qtwebengine5-doc
 Description: Web content engine library for Qt - development files
  QtWebEngine provides a Web browser engine that makes it easy to embed content
  from the World Wide Web into your Qt application.
@@ -148,9 +151,9 @@ Depends: libqt5webengine-data (= ${source:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
-Breaks: libqt5webengine5 (<< 5.7.1)
-Replaces: libqt5webengine5 (<< 5.7.1)
-Description: Web content engine library for Qt
+Breaks: libqt5webengine5 (<< 5.7.1+dfsg-4)
+Replaces: libqt5webengine5 (<< 5.7.1+dfsg-4)
+Description: Web content engine library for Qt - Core
  QtWebEngine provides a Web browser engine that makes it easy to embed content
  from the World Wide Web into your Qt application.
  .
@@ -163,7 +166,7 @@ Depends: libqt5webengine-data (= ${source:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
-Description: Web content engine library for Qt
+Description: Web content engine library for Qt - Widget
  QtWebEngine provides a Web browser engine that makes it easy to embed content
  from the World Wide Web into your Qt application.
  .
@@ -176,7 +179,7 @@ Depends: ${misc:Depends}, ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Breaks: libqt5webengine5 (<< 5.7.1)
 Replaces: libqt5webengine5 (<< 5.7.1)
-Description: Web content engine library for Qt
+Description: Web content engine library for Qt - Data
  QtWebEngine provides a Web browser engine that makes it easy to embed content
  from the World Wide Web into your Qt application.
  .
@@ -193,10 +196,23 @@ Description: Qt WebEngine QML module
  .
  This package contains the WebEngine QML module for QtDeclarative.
 
+Package: qtwebengine5-dev-tools
+Architecture: any
+Multi-Arch: foreign
+Section: devel
+Depends: qtchooser, ${misc:Depends}, ${shlibs:Depends}
+Description: Qt WebEngine tools
+ Qt is a cross-platform C++ application framework. Qt's primary feature
+ is its rich set of widgets that provide standard GUI functionality.
+ .
+ This package contains qwebengine_convert_dict tool which converts hunspell
+ 'dic' dictionaries to binary 'bdic' format, which is required by spellchecker
+ in Qt WebEngine.
+
 Package: qtwebengine5-examples
 Architecture: any
 Multi-Arch: same
-Depends: libjs-jquery, libjs-marked, ${misc:Depends}, ${shlibs:Depends}
+Depends: libjs-jquery, libjs-marked, qtwebengine5-dev-tools, ${misc:Depends}, ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
 Replaces: qt5webengine-examples (<< 5.7.1)
 Breaks: qt5webengine-examples (<< 5.7.1)
