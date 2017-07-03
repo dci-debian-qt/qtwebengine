@@ -1,4 +1,14 @@
-qtwebengine-opensource-src (5.9.0+dfsg-1) UNRELEASED; urgency=medium
+qtwebengine-opensource-src (5.9.1+dfsg-1) UNRELEASED; urgency=medium
+
+  [ Sandro Knauß ]
+  * New upstream release.
+  * Update copyright file.
+  * Update patch hunks
+  * Update sysmbols for amd64.
+
+ -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 01 Jul 2017 22:09:58 +0200
+
+qtwebengine-opensource-src (5.9.0+dfsg-1) experimental; urgency=medium
 
   [ Sandro Knauß ]
   * do not use gold linker for small archs
@@ -6,11 +16,14 @@ qtwebengine-opensource-src (5.9.0+dfsg-1) UNRELEASED; urgency=medium
     - add Recommends to doc package for dev package
     - MPL-1.0 and MPL-2.0 are now in common-licenses
   * replace mocha.js with a missing-source tarball
-  * Check missing-source tarballs (one new occurence found)
+  * Check missing-source tarballs (one new occurrence found)
   * Update short desciption of packages to make them unique.
   * Update lintian-overrides
   * Update Excluded-File list
   * Clean qmake caches in clean step
+  * Update copyright file.
+  * Add patch system-lcms2.patch - use system lcms2
+  * Add liblcms2-dev to Build-Deps
 
   [ Simon Quigley ]
   * New upstream release. (Closes: #865273)
@@ -27,7 +40,12 @@ qtwebengine-opensource-src (5.9.0+dfsg-1) UNRELEASED; urgency=medium
   * Add yasm to Build-Depends
   * New package qtwebengine5-dev-tools for tools used by examples
 
- -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Fri, 16 Jun 2017 16:54:53 +0100
+  [ Dmitry Shachnev ]
+  * Temporarily drop libv8-dev build-dependency. It is currently unused,
+    and cannot be used as long as our packaged v8 is ancient (see #785696).
+  * Update symbols files from the current armhf and i386 build logs.
+
+ -- Sandro Knauß <hefee@debian.org>  Sat, 01 Jul 2017 21:10:12 +0200
 
 qtwebengine-opensource-src (5.7.1+dfsg-6.1) unstable; urgency=medium
 
