@@ -1,3 +1,2 @@
 usr/lib/*/libQt5WebEngine.so.5*
 usr/lib/*/qt5/bin/qwebengine_convert_dict
-usr/lib/*/qt5/libexec/QtWebEngineProcess

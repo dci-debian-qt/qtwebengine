@@ -72,7 +72,6 @@ Build-Depends: autotools-dev,
                qtdeclarative5-private-dev (>= 5.9.0~),
                qtlocation5-dev,
                qtscript5-private-dev (>= 5.9.0~),
-               qttools5-dev,
                re2c,
                ruby,
                xauth,
@@ -152,8 +151,8 @@ Depends: libqt5webengine-data (= ${source:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
-Breaks: libqt5webengine5 (<< 5.7.1+dfsg-4)
-Replaces: libqt5webengine5 (<< 5.7.1+dfsg-4)
+Breaks: libqt5webengine5 (<< 5.9.0)
+Replaces: libqt5webengine5 (<< 5.9.0)
 Description: Web content engine library for Qt - Core
  QtWebEngine provides a Web browser engine that makes it easy to embed content
  from the World Wide Web into your Qt application.
