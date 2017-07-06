@@ -148,7 +148,8 @@ Description: Web content engine library for Qt
 Package: libqt5webenginecore5
 Architecture: any
 Multi-Arch: same
-Depends: libqt5webengine-data (= ${source:Version}),
+Depends: libharfbuzz-icu0 (>= 1.4),
+         libqt5webengine-data (= ${source:Version}),
          ${misc:Depends},
          ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
