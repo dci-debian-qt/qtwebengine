@@ -202,6 +202,8 @@ Architecture: any
 Multi-Arch: foreign
 Section: devel
 Depends: qtchooser, ${misc:Depends}, ${shlibs:Depends}
+Breaks: libqt5webengine5 (<< 5.9.1)
+Conflicts: libqt5webengine5 (<< 5.9.1)
 Description: Qt WebEngine tools
  Qt is a cross-platform C++ application framework. Qt's primary feature
  is its rich set of widgets that provide standard GUI functionality.
