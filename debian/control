@@ -68,16 +68,9 @@ Build-Depends: autotools-dev,
                pkg-kde-tools,
                protobuf-compiler,
                python,
-<<<<<<< HEAD
-               qtbase5-private-dev (>= 5.9.0~),
-               qtdeclarative5-private-dev (>= 5.9.0~),
-               qtlocation5-dev,
-               qtscript5-private-dev (>= 5.9.0~),
-=======
                qtbase5-private-dev (>= 5.9.1~),
                qtdeclarative5-private-dev (>= 5.9.1~),
                qtpositioning5-dev,
->>>>>>> experimental
                qttools5-dev,
                re2c,
                ruby,
