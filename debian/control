@@ -2,6 +2,7 @@ Source: qtwebengine-opensource-src
 Maintainer: Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>
 Uploaders: Scarlett Clark <sgclark@kubuntu.org>,
            Sandro Knauß <hefee@debian.org>,
+           Dmitry Shachnev <mitya57@debian.org>,
            Simon Quigley <tsimonq2@ubuntu.com>
 Section: libs
 Priority: optional
@@ -15,9 +16,9 @@ Build-Depends: autotools-dev,
                gperf,
                khronos-api,
                libasound2-dev [linux-any],
-               libavcodec-dev,
-               libavformat-dev,
-               libavutil-dev,
+               libavcodec-dev (>= 7:3.1.1),
+               libavformat-dev (>= 7:3.1.1),
+               libavutil-dev (>= 7:3.1.1),
                libcap-dev [linux-any],
                libdbus-1-dev,
                libegl1-mesa-dev,
@@ -43,9 +44,8 @@ Build-Depends: autotools-dev,
                libpng-dev,
                libprotobuf-dev,
                libpulse-dev,
-               libqt5opengl5-dev (>= 5.9.0~),
-               libqt5webchannel5-dev (>= 5.9.0~),
-               libqt5xmlpatterns5-dev (>= 5.9.0~),
+               libqt5opengl5-dev (>= 5.9.1~),
+               libqt5webchannel5-dev (>= 5.9.1~),
                libre2-dev,
                libsnappy-dev,
                libsqlite3-dev,
@@ -68,10 +68,16 @@ Build-Depends: autotools-dev,
                pkg-kde-tools,
                protobuf-compiler,
                python,
+<<<<<<< HEAD
                qtbase5-private-dev (>= 5.9.0~),
                qtdeclarative5-private-dev (>= 5.9.0~),
                qtlocation5-dev,
                qtscript5-private-dev (>= 5.9.0~),
+=======
+               qtbase5-private-dev (>= 5.9.1~),
+               qtdeclarative5-private-dev (>= 5.9.1~),
+               qtpositioning5-dev,
+>>>>>>> experimental
                qttools5-dev,
                re2c,
                ruby,
@@ -79,9 +85,9 @@ Build-Depends: autotools-dev,
                xvfb,
                yasm [amd64 i386],
                yui-compressor
-Build-Depends-Indep: libqt5sql5-sqlite (>= 5.9.0~),
-                     qtbase5-doc-html (>= 5.9.0~),
-                     qttools5-dev-tools (>= 5.9.0~)
+Build-Depends-Indep: libqt5sql5-sqlite (>= 5.9.1~),
+                     qtbase5-doc-html (>= 5.9.1~),
+                     qttools5-dev-tools (>= 5.9.1~)
 Standards-Version: 4.0.0
 Vcs-Browser: https://anonscm.debian.org/git/pkg-kde/qt/qtwebengine.git
 Vcs-Git: https://anonscm.debian.org/git/pkg-kde/qt/qtwebengine.git
@@ -97,7 +103,9 @@ Depends: libqt5webchannel5-dev,
          libqt5webenginewidgets5 (= ${binary:Version}),
          qtbase5-dev,
          qtdeclarative5-dev,
-         ${misc:Depends}
+         qtpositioning5-dev,
+         ${misc:Depends},
+         ${shlibs:Depends}
 Recommends: qtwebengine5-doc
 Description: Web content engine library for Qt - development files
  QtWebEngine provides a Web browser engine that makes it easy to embed content

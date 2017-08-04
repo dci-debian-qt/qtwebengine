@@ -1,12 +1,40 @@
-qtwebengine-opensource-src (5.9.1+dfsg-1) UNRELEASED; urgency=medium
+qtwebengine-opensource-src (5.9.1+dfsg-2) experimental; urgency=medium
+
+  * Make qtwebengine5-dev depend on qtpositioning5-dev, as the built CMake
+    files now include it as dependency.
+  * Add a patch to print compiler commands when bootstrapping gn. This helps
+    us discover wrong compiler flags, such as using -mfpu=neon on armhf.
+  * Add a patch to apply ARM compiler options even on host builds, to make
+    sure NEON is not used for gn bootstrap.
+  * Update symbols files from buildds’ logs.
+  * Add myself to Uploaders.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Fri, 21 Jul 2017 00:05:59 +0300
+
+qtwebengine-opensource-src (5.9.1+dfsg-1) experimental; urgency=medium
 
   [ Sandro Knauß ]
   * New upstream release.
   * Update copyright file.
   * Update patch hunks
   * Update sysmbols for amd64.
+  * Remove version dependency from libre2-dev, because with the new stable all
+    releases have the new enough version.
+  * Add version dependency to libav*-dev packages, otherwise it fails on
+    ubuntu xenial.
+  * Bump Qt build-dependencies to 5.9.1.
 
- -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 01 Jul 2017 22:09:58 +0200
+  [ Dmitry Shachnev ]
+  * Change qtlocation5-dev build-dependency to qtpositioning5-dev, this
+    is what qtwebengine really uses for positioning support.
+  * Drop unused libqt5xmlpatterns5-dev and qtscript5-private-dev
+    build-dependencies.
+  * Update libqt5webenginecore5.symbols from the arm64 build log.
+
+  [ Jonathan Riddell ]
+  * Build-dep on qttools5-dev to build Qt Designer plugin
+
+ -- Sandro Knauß <hefee@debian.org>  Sun, 16 Jul 2017 19:49:50 +0200
 
 qtwebengine-opensource-src (5.9.0+dfsg-1) experimental; urgency=medium
 
