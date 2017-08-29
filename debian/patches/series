@@ -9,3 +9,4 @@ add_mips_support.patch
 verbose-gn-bootstrap.patch
 armhf-options.patch
 fix-host-arch-detection.patch
+armhf-on-aarch64-host.patch
