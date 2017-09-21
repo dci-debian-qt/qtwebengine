@@ -9,19 +9,23 @@ Reviewed-by: Sandro Knauß <hefee@debian.org>
 Last-Update: 2017-06-29
 ---
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
---- a/src/3rdparty/chromium/base/BUILD.gn
-+++ b/src/3rdparty/chromium/base/BUILD.gn
-@@ -838,8 +838,6 @@ component("base") {
+Index: qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/BUILD.gn
+===================================================================
+--- qtwebengine-everywhere-src-5.10.0-alpha.orig/src/3rdparty/chromium/base/BUILD.gn
++++ qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/BUILD.gn
+@@ -885,8 +885,6 @@ component("base") {
      "third_party/dmg_fp/dmg_fp.h",
      "third_party/dmg_fp/dtoa_wrapper.cc",
      "third_party/dmg_fp/g_fmt.cc",
 -    "third_party/icu/icu_utf.cc",
 -    "third_party/icu/icu_utf.h",
      "third_party/superfasthash/superfasthash.c",
+     "third_party/valgrind/memcheck.h",
      "threading/non_thread_safe.h",
-     "threading/non_thread_safe_impl.cc",
---- a/src/3rdparty/chromium/base/files/file_path.cc
-+++ b/src/3rdparty/chromium/base/files/file_path.cc
+Index: qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/files/file_path.cc
+===================================================================
+--- qtwebengine-everywhere-src-5.10.0-alpha.orig/src/3rdparty/chromium/base/files/file_path.cc
++++ qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/files/file_path.cc
 @@ -18,7 +18,7 @@
  
  #if defined(OS_MACOSX)
@@ -31,7 +35,7 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  #endif
  
  #if defined(OS_WIN)
-@@ -1156,9 +1156,9 @@ inline int HFSReadNextNonIgnorableCodepo
+@@ -1159,9 +1159,9 @@ inline int HFSReadNextNonIgnorableCodepo
                                              int* index) {
    int codepoint = 0;
    while (*index < length && codepoint == 0) {
@@ -43,8 +47,10 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
      DCHECK_GT(codepoint, 0);
      if (codepoint > 0) {
        // Check if there is a subtable for this upper byte.
---- a/src/3rdparty/chromium/base/json/json_parser.cc
-+++ b/src/3rdparty/chromium/base/json/json_parser.cc
+Index: qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/json/json_parser.cc
+===================================================================
+--- qtwebengine-everywhere-src-5.10.0-alpha.orig/src/3rdparty/chromium/base/json/json_parser.cc
++++ qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/json/json_parser.cc
 @@ -16,7 +16,7 @@
  #include "base/strings/stringprintf.h"
  #include "base/strings/utf_string_conversion_utils.h"
@@ -54,13 +60,11 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  #include "base/values.h"
  
  namespace base {
-@@ -630,21 +630,21 @@ bool JSONParser::ConsumeStringRaw(String
- 
+@@ -464,13 +464,13 @@ bool JSONParser::ConsumeStringRaw(String
    while (CanConsume(1)) {
      int start_index = index_;
--    pos_ = start_pos_ + index_;  // CBU8_NEXT is postcrement.
+     pos_ = start_pos_ + index_;  // CBU8_NEXT is postcrement.
 -    CBU8_NEXT(start_pos_, index_, length, next_char);
-+    pos_ = start_pos_ + index_;  // U8_NEXT is postcrement.
 +    U8_NEXT(start_pos_, index_, length, next_char);
      if (next_char < 0 || !IsValidCharacter(next_char)) {
        if ((options_ & JSON_REPLACE_INVALID_CHARACTERS) == 0) {
@@ -70,17 +74,18 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 -      CBU8_NEXT(start_pos_, start_index, length, next_char);
 +      U8_NEXT(start_pos_, start_index, length, next_char);
        string.Convert();
-       string.AppendString(kUnicodeReplacementString);
-       continue;
+       string.AppendString(kUnicodeReplacementString,
+                           arraysize(kUnicodeReplacementString) - 1);
+@@ -478,7 +478,7 @@ bool JSONParser::ConsumeStringRaw(String
      }
  
      if (next_char == '"') {
 -      --index_;  // Rewind by one because of CBU8_NEXT.
 +      --index_;  // Rewind by one because of U8_NEXT.
-       out->Swap(&string);
+       *out = std::move(string);
        return true;
      }
-@@ -774,10 +774,10 @@ bool JSONParser::DecodeUTF16(std::string
+@@ -608,10 +608,10 @@ bool JSONParser::DecodeUTF16(std::string
  
    // If this is a high surrogate, consume the next code unit to get the
    // low surrogate.
@@ -93,7 +98,7 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
        return false;
  
      // Make sure that the token has more characters to consume the
-@@ -794,24 +794,24 @@ bool JSONParser::DecodeUTF16(std::string
+@@ -628,24 +628,24 @@ bool JSONParser::DecodeUTF16(std::string
  
      NextNChars(3);
  
@@ -123,7 +128,7 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
    }
  
    dest_string->append(code_unit8);
-@@ -828,9 +828,9 @@ void JSONParser::DecodeUTF8(const int32_
+@@ -662,9 +662,9 @@ void JSONParser::DecodeUTF8(const int32_
    } else {
      char utf8_units[4] = { 0 };
      int offset = 0;
@@ -133,10 +138,12 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
 -    // CBU8_APPEND_UNSAFE can overwrite up to 4 bytes, so utf8_units may not be
 +    // U8_APPEND_UNSAFE can overwrite up to 4 bytes, so utf8_units may not be
      // zero terminated at this point.  |offset| contains the correct length.
-     dest->AppendString(std::string(utf8_units, offset));
+     dest->AppendString(utf8_units, offset);
    }
---- a/src/3rdparty/chromium/base/json/string_escape.cc
-+++ b/src/3rdparty/chromium/base/json/string_escape.cc
+Index: qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/json/string_escape.cc
+===================================================================
+--- qtwebengine-everywhere-src-5.10.0-alpha.orig/src/3rdparty/chromium/base/json/string_escape.cc
++++ qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/json/string_escape.cc
 @@ -14,7 +14,7 @@
  #include "base/strings/stringprintf.h"
  #include "base/strings/utf_string_conversion_utils.h"
@@ -146,8 +153,10 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  
  namespace base {
  
---- a/src/3rdparty/chromium/base/strings/pattern.cc
-+++ b/src/3rdparty/chromium/base/strings/pattern.cc
+Index: qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/strings/pattern.cc
+===================================================================
+--- qtwebengine-everywhere-src-5.10.0-alpha.orig/src/3rdparty/chromium/base/strings/pattern.cc
++++ qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/strings/pattern.cc
 @@ -4,13 +4,13 @@
  
  #include "base/strings/pattern.h"
@@ -203,8 +212,10 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
      *p += offset;
      return c;
    }
---- a/src/3rdparty/chromium/base/strings/string_split.cc
-+++ b/src/3rdparty/chromium/base/strings/string_split.cc
+Index: qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/strings/string_split.cc
+===================================================================
+--- qtwebengine-everywhere-src-5.10.0-alpha.orig/src/3rdparty/chromium/base/strings/string_split.cc
++++ qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/strings/string_split.cc
 @@ -8,7 +8,7 @@
  
  #include "base/logging.h"
@@ -214,8 +225,10 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  
  namespace base {
  
---- a/src/3rdparty/chromium/base/strings/string_util.cc
-+++ b/src/3rdparty/chromium/base/strings/string_util.cc
+Index: qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/strings/string_util.cc
+===================================================================
+--- qtwebengine-everywhere-src-5.10.0-alpha.orig/src/3rdparty/chromium/base/strings/string_util.cc
++++ qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/strings/string_util.cc
 @@ -25,7 +25,7 @@
  #include "base/memory/singleton.h"
  #include "base/strings/utf_string_conversion_utils.h"
@@ -225,7 +238,7 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  #include "build/build_config.h"
  
  namespace base {
-@@ -357,19 +357,19 @@ void TruncateUTF8ToByteSize(const std::s
+@@ -372,19 +372,19 @@ void TruncateUTF8ToByteSize(const std::s
    }
    DCHECK_LE(byte_size,
              static_cast<uint32_t>(std::numeric_limits<int32_t>::max()));
@@ -249,7 +262,7 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
      if (!IsValidCharacter(code_point) ||
          !IsValidCodepoint(code_point)) {
        char_index = prev - 1;
-@@ -522,7 +522,7 @@ bool IsStringUTF8(const StringPiece& str
+@@ -537,7 +537,7 @@ bool IsStringUTF8(const StringPiece& str
  
    while (char_index < src_len) {
      int32_t code_point;
@@ -258,8 +271,10 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
      if (!IsValidCharacter(code_point))
        return false;
    }
---- a/src/3rdparty/chromium/base/strings/utf_string_conversion_utils.cc
-+++ b/src/3rdparty/chromium/base/strings/utf_string_conversion_utils.cc
+Index: qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/strings/utf_string_conversion_utils.cc
+===================================================================
+--- qtwebengine-everywhere-src-5.10.0-alpha.orig/src/3rdparty/chromium/base/strings/utf_string_conversion_utils.cc
++++ qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/base/strings/utf_string_conversion_utils.cc
 @@ -4,7 +4,7 @@
  
  #include "base/strings/utf_string_conversion_utils.h"
@@ -338,9 +353,11 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
  }
  
  // Generalized Unicode converter -----------------------------------------------
---- a/src/3rdparty/chromium/tools/gn/bootstrap/bootstrap.py
-+++ b/src/3rdparty/chromium/tools/gn/bootstrap/bootstrap.py
-@@ -472,7 +472,6 @@ def write_gn_ninja(path, root_gen_dir, o
+Index: qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/tools/gn/bootstrap/bootstrap.py
+===================================================================
+--- qtwebengine-everywhere-src-5.10.0-alpha.orig/src/3rdparty/chromium/tools/gn/bootstrap/bootstrap.py
++++ qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/tools/gn/bootstrap/bootstrap.py
+@@ -495,7 +495,6 @@ def write_gn_ninja(path, root_gen_dir, o
        'base/task_scheduler/task_traits.cc',
        'base/third_party/dmg_fp/dtoa_wrapper.cc',
        'base/third_party/dmg_fp/g_fmt.cc',
@@ -348,7 +365,7 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
        'base/threading/non_thread_safe_impl.cc',
        'base/threading/post_task_and_reply_impl.cc',
        'base/threading/sequenced_task_runner_handle.cc',
-@@ -574,7 +573,7 @@ def write_gn_ninja(path, root_gen_dir, o
+@@ -604,7 +603,7 @@ def write_gn_ninja(path, root_gen_dir, o
      }
  
    if is_linux:
@@ -357,8 +374,10 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
      ldflags.extend(['-pthread'])
  
      static_libraries['xdg_user_dirs'] = {
---- a/src/3rdparty/chromium/tools/gn/BUILD.gn
-+++ b/src/3rdparty/chromium/tools/gn/BUILD.gn
+Index: qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/tools/gn/BUILD.gn
+===================================================================
+--- qtwebengine-everywhere-src-5.10.0-alpha.orig/src/3rdparty/chromium/tools/gn/BUILD.gn
++++ qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/tools/gn/BUILD.gn
 @@ -277,6 +277,7 @@ executable("gn") {
  
    libs = [
@@ -367,8 +386,10 @@ This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
    ]
  }
  
---- a/src/3rdparty/chromium/ui/gfx/utf16_indexing.cc
-+++ b/src/3rdparty/chromium/ui/gfx/utf16_indexing.cc
+Index: qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/ui/gfx/utf16_indexing.cc
+===================================================================
+--- qtwebengine-everywhere-src-5.10.0-alpha.orig/src/3rdparty/chromium/ui/gfx/utf16_indexing.cc
++++ qtwebengine-everywhere-src-5.10.0-alpha/src/3rdparty/chromium/ui/gfx/utf16_indexing.cc
 @@ -5,13 +5,13 @@
  #include "ui/gfx/utf16_indexing.h"
  
