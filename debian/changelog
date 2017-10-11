@@ -4,6 +4,19 @@ qtwebengine-opensource-src (5.10.0~alpha+dfsg-0neon) UNRELEASED; urgency=medium
 
  -- Jonathan Riddell <jr@jriddell.org>  Wed, 13 Sep 2017 13:18:32 +0100
 
+qtwebengine-opensource-src (5.9.1+dfsg-5) unstable; urgency=medium
+
+  * Drop add_mips_support.patch. Chromium cannot be built for big endian
+    anyway, because of skia.
+  * Limit Architecture field to architectures supported by upstream
+    (closes: #864323, #864324, #864325, #864326).
+  * Fix package name in dh_link command (closes: #876860).
+  * Bump Standards-Version to 4.1.1, stop using deprecated Priority: extra.
+  * Drop autotools-dev and dh-autoreconf build-dependencies, they are
+    unnecessary with debhelper 10.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 30 Sep 2017 20:25:06 +0300
+
 qtwebengine-opensource-src (5.9.1+dfsg-4) unstable; urgency=medium
 
   * Disable gold on arm64, to workaround bug #869768.
