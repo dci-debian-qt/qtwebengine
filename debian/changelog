@@ -4,6 +4,17 @@ qtwebengine-opensource-src (5.10.0~beta+dfsg-0neon) UNRELEASED; urgency=medium
 
  -- Jonathan Riddell <jr@jriddell.org>  Wed, 13 Sep 2017 13:18:32 +0100
 
+qtwebengine-opensource-src (5.9.2+dfsg-1~) UNRELEASED; urgency=medium
+
+  [ Sandro Knauß ]
+  * New upstream release.
+  * Remove upstream applied patch: armhf-options.patch
+  * Update patch hunks.
+  * Update copyright for 5.9.2.
+  * Add new Build-Dependency: qtquickcontrols2-5-dev
+
+ -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Tue, 17 Oct 2017 23:57:46 +0200
+
 qtwebengine-opensource-src (5.9.1+dfsg-5) unstable; urgency=medium
 
   * Drop add_mips_support.patch. Chromium cannot be built for big endian
