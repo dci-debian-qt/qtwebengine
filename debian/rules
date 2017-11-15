@@ -30,6 +30,7 @@ disabled_jit_architectures := armel mips mipsel
 disabled_pch_architectures := amd64 powerpc s390x
 
 small_architectures := armhf mipsel
+no_gold_architectures := arm64 armhf mipsel
 
 defines+=skia_use_system_expat \
          skia_use_system_freetype2 \
@@ -97,8 +98,8 @@ override_dh_auto_clean:
 	rm -rf $(CURDIR)/src/3rdparty/chromium/third_party/jstemplate/jstemplate_compiled.js
 	rm -rf $(CURDIR)/src/3rdparty/chromium/third_party/mocha/mocha.js
 	rm -rf $(CURDIR)/examples/webenginewidgets/contentmanipulation/jquery*.js
-	rm -rf $(CURDIR)/examples/webenginewidgets/markdowneditor/resources/marked*.js
-	rm -rf $(CURDIR)/examples/webengine/recipebrowser/resources/pages/assets/3rdparty/marked.*.js
+	rm -rf $(CURDIR)/examples/webenginewidgets/markdowneditor/resources/3rdparty/marked*.js
+	rm -rf $(CURDIR)/examples/webengine/recipebrowser/resources/pages/assets/3rdparty/marked*.js
 	
 	for fname in $(touch_files); do \
 		rm -rf $(CURDIR)/$${fname}; \
@@ -148,7 +149,10 @@ ifeq ($(DEB_HOST_ARCH),$(findstring $(DEB_HOST_ARCH), $(small_architectures)))
 	echo "QMAKE_CXXFLAGS += --param ggc-min-expand=20" >> .qmake.conf
 	echo "QMAKE_CFLAGS += --param ggc-min-expand=20" >> .qmake.conf
 	echo "QMAKE_LFLAGS -= Wl,--gc-sections" >> .qmake.conf
-	#Use not ld.gold
+endif
+
+ifeq ($(DEB_HOST_ARCH),$(findstring $(DEB_HOST_ARCH), $(no_gold_architectures)))
+	# Do not use ld.gold
 	echo "QMAKE_LFLAGS -= -fuse-ld=gold" >> .qmake.conf
 	echo "QMAKE_LFLAGS += -fuse-ld=bfd" >> .qmake.conf
 endif
@@ -173,11 +177,13 @@ endif
 
 	>examples/webenginewidgets/contentmanipulation/jquery.js cat debian/missing-sources/jquery-*.js
 	yui-compressor --type js "examples/webenginewidgets/contentmanipulation/jquery.js" -o "examples/webenginewidgets/contentmanipulation/jquery.min.js"
-	>examples/webenginewidgets/markdowneditor/resources/marked.js tar xaf debian/missing-sources/marked*.tar.gz --wildcards --to-stdout '*/marked.js'
-	>examples/webengine/recipebrowser/resources/pages/assets/3rdparty/marked.min.js tar xaf debian/missing-sources/marked*.tar.gz --wildcards --to-stdout '*/marked.js'
+	>examples/webenginewidgets/markdowneditor/resources/3rdparty/marked.js tar xaf debian/missing-sources/marked*.tar.gz --wildcards --to-stdout '*/marked.js'
+	>examples/webengine/recipebrowser/resources/pages/assets/3rdparty/marked.js tar xaf debian/missing-sources/marked*.tar.gz --wildcards --to-stdout '*/marked.js'
 	>src/3rdparty/chromium/third_party/mocha/mocha.js tar xaf debian/missing-sources/mocha*.tar.gz --wildcards --to-stdout '*/mocha.js'
-	yui-compressor --type js "examples/webenginewidgets/markdowneditor/resources/marked.js" -o "examples/webenginewidgets/markdowneditor/resources/marked.min.js"
+	yui-compressor --type js "examples/webenginewidgets/markdowneditor/resources/3rdparty/marked.js" -o "examples/webenginewidgets/markdowneditor/resources/3rdparty/marked.min.js"
+	yui-compressor --type js "examples/webengine/recipebrowser/resources/pages/assets/3rdparty/marked.js" -o "examples/webengine/recipebrowser/resources/pages/assets/3rdparty/marked.min.js"
 
+	
 	for fname in $(touch_files); do \
 		touch $(CURDIR)/$${fname}; \
 	done
@@ -212,7 +218,9 @@ override_dh_link:
 	dh_link --package=qtwebengine5-examples \
 		usr/share/javascript/jquery/jquery.min.js usr/lib/$(DEB_HOST_MULTIARCH)/qt5/examples/webenginewidgets/contentmanipulation/jquery.min.js \
 		usr/share/javascript/marked/marked.min.js usr/lib/$(DEB_HOST_MULTIARCH)/qt5/examples/webenginewidgets/markdowneditor/resources/marked.min.js
-
+	dh_link --package=qtwebengine5-dev-tools \
+		usr/lib/qt5/bin/qwebengine_convert_dict usr/lib/$(DEB_HOST_MULTIARCH)/qt5/bin/qwebengine_convert_dict
+	
 	dh_link --remaining-packages
 
 override_dh_auto_test-arch:

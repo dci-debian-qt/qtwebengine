@@ -1,8 +1,64 @@
-qtwebengine-opensource-src (5.9.2-0neon) UNRELEASED; urgency=medium
+qtwebengine-opensource-src (5.9.2+dfsg-3) UNRELEASED; urgency=medium
 
-  * New release
+  [ Dmitry Shachnev ]
+  * Backport upstream patch to fix build with ICU 60.
 
- -- Jonathan Riddell <jr@jriddell.org>  Fri, 10 Nov 2017 11:41:41 +0000
+ -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Thu, 09 Nov 2017 13:46:23 +0300
+
+qtwebengine-opensource-src (5.9.2+dfsg-2) unstable; urgency=medium
+
+  * Update for Qt binaries location change in qtbase 5.9.2+dfsg-3.
+    - Install qwebengine_convert_dict tool into the new location.
+    - Provide a compatibility symlink for the old location.
+    - Bump qtbase5-private-dev and qttools5-dev-tools build-dependencies.
+  * Update libqt5webenginecore5.symbols from buildds’ logs.
+  * Upload to unstable.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Fri, 27 Oct 2017 21:39:36 +0300
+
+qtwebengine-opensource-src (5.9.2+dfsg-1) experimental; urgency=medium
+
+  * New upstream release.
+  * Remove upstream applied patch: armhf-options.patch
+  * Update patch hunks.
+  * Update copyright for 5.9.2.
+  * Add new Build-Dependency: qtquickcontrols2-5-dev
+  * Bump Qt build-dependencies to 5.9.2.
+  * Update symbols for libqt5webenginecore5 for 5.9.2 for amd64.
+  * Synchronize missing-sources for 5.9.2.
+  * Update lintian-overrides for source.
+  * Update lintian-overrides for libqt5webenginecore5
+
+ -- Sandro Knauß <hefee@debian.org>  Thu, 19 Oct 2017 14:33:00 +0200
+
+qtwebengine-opensource-src (5.9.1+dfsg-5) unstable; urgency=medium
+
+  * Drop add_mips_support.patch. Chromium cannot be built for big endian
+    anyway, because of skia.
+  * Limit Architecture field to architectures supported by upstream
+    (closes: #864323, #864324, #864325, #864326).
+  * Fix package name in dh_link command (closes: #876860).
+  * Bump Standards-Version to 4.1.1, stop using deprecated Priority: extra.
+  * Drop autotools-dev and dh-autoreconf build-dependencies, they are
+    unnecessary with debhelper 10.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Sat, 30 Sep 2017 20:25:06 +0300
+
+qtwebengine-opensource-src (5.9.1+dfsg-4) unstable; urgency=medium
+
+  * Disable gold on arm64, to workaround bug #869768.
+  * Add the needed QML dependencies to qtwebengine5-examples package
+    (closes: #857859).
+  * Update debian/libqt5webenginecore5.symbols from buildds’ logs.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Wed, 23 Aug 2017 21:29:52 +0300
+
+qtwebengine-opensource-src (5.9.1+dfsg-3) unstable; urgency=medium
+
+  * Team upload.
+  * Release to unstable.
+
+ -- Lisandro Damián Nicanor Pérez Meyer <lisandro@debian.org>  Wed, 16 Aug 2017 15:27:58 -0300
 
 qtwebengine-opensource-src (5.9.1+dfsg-2) experimental; urgency=medium
 
