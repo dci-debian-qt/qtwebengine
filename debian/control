@@ -119,7 +119,7 @@ Description: Web content engine library for Qt - private development files
  Qt 5 applications using QtWebEngine library.
 
 Package: libqt5webengine5-dev
-Architecture: all
+Architecture: amd64 arm64 armhf i386 mipsel
 Multi-Arch: foreign
 Section: oldlibs
 Depends: qtwebengine5-dev, ${misc:Depends}
@@ -175,7 +175,7 @@ Description: Web content engine library for Qt - Widget
  This package contains the widget QtWebEngine library.
 
 Package: libqt5webengine-data
-Architecture: all
+Architecture: amd64 arm64 armhf i386 mipsel
 Multi-Arch: foreign
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Pre-Depends: ${misc:Pre-Depends}
@@ -236,7 +236,7 @@ Description: Qt WebEngine - Examples
  This package contains the WebEngine examples.
 
 Package: qtwebengine-examples
-Architecture: any
+Architecture: amd64 arm64 armhf i386 mipsel
 Multi-Arch: foreign
 Depends: qtwebengine5-examples
 Pre-Depends: ${misc:Pre-Depends}
