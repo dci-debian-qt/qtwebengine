@@ -1,4 +1,4 @@
-qtwebengine-opensource-src (5.9.3+dfsg-0ubuntu1) UNRELEASED; urgency=medium
+qtwebengine-opensource-src (5.9.3+dfsg-0ubuntu1) bionic; urgency=medium
 
   [ Dmitry Shachnev ]
   * Backport upstream patch to fix build with ICU 60.
@@ -7,7 +7,7 @@ qtwebengine-opensource-src (5.9.3+dfsg-0ubuntu1) UNRELEASED; urgency=medium
   * New upstream release.
   * Update symbols from build logs.
 
- -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Thu, 09 Nov 2017 13:46:23 +0300
+ -- Simon Quigley <tsimonq2@ubuntu.com>  Sat, 09 Dec 2017 22:16:48 -0600
 
 qtwebengine-opensource-src (5.9.2+dfsg-2) unstable; urgency=medium
 
