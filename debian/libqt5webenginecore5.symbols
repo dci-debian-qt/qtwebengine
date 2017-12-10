@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 5.9.2 amd64 armhf i386
+# SymbolsHelper-Confirmed: 5.9.3 amd64
 libQt5WebEngineCore.so.5 libqt5webenginecore5 #MINVER#
  (optional=gold)Qt_5.0@Qt_5.0 5.7.1
  (optional=gold)Qt_5.1@Qt_5.1 5.7.1
@@ -480,6 +480,7 @@ libQt5WebEngineCore.so.5 libqt5webenginecore5 #MINVER#
  _ZNK15QtWebEngineCore18WebContentsAdapter16lastContentsSizeEv@Qt_5 5.7.1
  _ZNK15QtWebEngineCore18WebContentsAdapter16lastScrollOffsetEv@Qt_5 5.7.1
  _ZNK15QtWebEngineCore18WebContentsAdapter17currentZoomFactorEv@Qt_5 5.7.1
+ _ZNK15QtWebEngineCore18WebContentsAdapter20isFindTextInProgressEv@Qt_5 5.9.3
  _ZNK15QtWebEngineCore18WebContentsAdapter7iconUrlEv@Qt_5 5.7.1
  _ZNK15QtWebEngineCore18WebContentsAdapter9activeUrlEv@Qt_5 5.7.1
  _ZNK15QtWebEngineCore18WebContentsAdapter9canGoBackEv@Qt_5 5.7.1
