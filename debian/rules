@@ -34,7 +34,7 @@ no_gold_architectures := arm64 armhf mipsel
 
 defines+=skia_use_system_expat \
          skia_use_system_freetype2 \
-         skia_use_system_icu \
+         #skia_use_system_icu \ # neon: xenial icu version is too old
          skia_use_system_json \
          skia_use_system_libjpeg_turbo \
          skia_use_system_libpng \
@@ -68,8 +68,8 @@ endif
 
 config_args = -proprietary-codecs \
               -system-opus \
-              -system-webp \
-              -system-webengine-icu
+              -system-webp
+              #-system-webengine-icu # neon: xenial icu version is too old
 
 touch_files = src/3rdparty/chromium/third_party/analytics/google-analytics-bundle.js \
 	      src/3rdparty/chromium/third_party/web-animations-js/sources/web-animations.min.js \
