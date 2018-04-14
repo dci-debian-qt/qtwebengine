@@ -1,8 +1,8 @@
-qtwebengine-opensource-src (5.9.5+dfsg-0ubuntu1) UNRELEASED; urgency=medium
+qtwebengine-opensource-src (5.9.5+dfsg-0ubuntu1) bionic; urgency=medium
 
   * New upstream release.
 
- -- Simon Quigley <tsimonq2@ubuntu.com>  Sat, 14 Apr 2018 13:11:56 -0500
+ -- Simon Quigley <tsimonq2@ubuntu.com>  Sat, 14 Apr 2018 13:14:07 -0500
 
 qtwebengine-opensource-src (5.9.4+dfsg-0ubuntu1) bionic; urgency=medium
 
