@@ -1,5 +1,8 @@
 qtwebengine-opensource-src (5.9.5+dfsg-0ubuntu2) UNRELEASED; urgency=medium
 
+  * Forcefully disable make output synchronization introduced in debhelper
+    11.1.5~alpha1. Ninja is a single process, and with synchronized output
+    the buildds do not see any activity and think that the build is hung.
 
  -- Dmitry Shachnev <mitya57@ubuntu.com>  Sun, 15 Apr 2018 14:16:48 +0300
 
