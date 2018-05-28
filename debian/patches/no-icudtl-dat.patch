@@ -10,10 +10,8 @@ Reviewed-by: Sandro Knauß <hefee@debian.org>
 Last-Update: 2017-06-29
 ---
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
-Index: qtwebengine-everywhere-src-5.10.0-alpha/src/core/web_engine_library_info.cpp
-===================================================================
---- qtwebengine-everywhere-src-5.10.0-alpha.orig/src/core/web_engine_library_info.cpp
-+++ qtwebengine-everywhere-src-5.10.0-alpha/src/core/web_engine_library_info.cpp
+--- a/src/core/web_engine_library_info.cpp
++++ b/src/core/web_engine_library_info.cpp
 @@ -260,24 +260,7 @@ QString icuDataPath()
  #if defined(OS_MACOSX) && defined(QT_MAC_FRAMEWORK_BUILD)
      return getResourcesPath(frameworkBundle());
