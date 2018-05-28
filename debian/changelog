@@ -1,3 +1,9 @@
+qtwebengine-opensource-src (5.11.0+dfsg-0neon) xenial; urgency=medium
+
+  * Release 5.11 to neon
+
+ -- Bhushan Shah <bshah@kde.org>  Mon, 28 May 2018 05:15:20 +0000
+
 qtwebengine-opensource-src (5.10.1+dfsg-4) unstable; urgency=medium
 
   * Backport two upstream patches to fix build with system ICU 60:
