@@ -1,0 +1,97 @@
+From 9397251b76b89b7ca244ec5225dc17dd3b9afc0b Mon Sep 17 00:00:00 2001
+From: Michal Klocek <michal.klocek@qt.io>
+Date: Mon, 4 Jun 2018 19:37:07 +0200
+Subject: [PATCH] Fix compilation with opengl es2
+
+Do not include <QOpenGLContext> with gl_bindings.h since
+this will eventually include gl and gles heders into same
+compilation unit.
+
+Confilicting headers:
+
+third_party/khronos/GLES3/gl32.h
+third_party/mesa/src/include/GL/gl.h
+
+Change-Id: I0450a4084011ead4bfa80d68aeea3f5859df4c94
+Reviewed-by: Allan Sandfeld Jensen <allan.jensen@qt.io>
+---
+ src/core/gl_context_qt.cpp | 11 +++++++++++
+ src/core/gl_context_qt.h   |  2 +-
+ src/core/gl_surface_qt.cpp | 17 ++---------------
+ 3 files changed, 14 insertions(+), 16 deletions(-)
+
+diff --git a/src/core/gl_context_qt.cpp b/src/core/gl_context_qt.cpp
+index cd82b1069..9ed1db8ba 100644
+--- a/src/core/gl_context_qt.cpp
++++ b/src/core/gl_context_qt.cpp
+@@ -144,6 +144,17 @@ void* GLContextHelper::getNativeDisplay()
+     return resourceForIntegration(QByteArrayLiteral("nativedisplay"));
+ }
+ 
++QFunctionPointer GLContextHelper::getGlXGetProcAddress()
++{
++     QFunctionPointer get_proc_address = nullptr;
++#ifndef QT_NO_OPENGL
++    if (QOpenGLContext *context = qt_gl_global_share_context()) {
++        get_proc_address = context->getProcAddress("glXGetProcAddress");
++    }
++#endif
++    return get_proc_address;
++}
++
+ QT_END_NAMESPACE
+ 
+ #if defined(USE_OZONE) || defined(OS_WIN)
+diff --git a/src/core/gl_context_qt.h b/src/core/gl_context_qt.h
+index 9c8a43a0a..8ffdad583 100644
+--- a/src/core/gl_context_qt.h
++++ b/src/core/gl_context_qt.h
+@@ -62,7 +62,7 @@ public:
+     static void* getEGLDisplay();
+     static void* getXDisplay();
+     static void* getNativeDisplay();
+-
++    static QFunctionPointer getGlXGetProcAddress();
+ private:
+     Q_INVOKABLE bool initializeContextOnBrowserThread(gl::GLContext* context, gl::GLSurface* surface, gl::GLContextAttribs attribs);
+ 
+diff --git a/src/core/gl_surface_qt.cpp b/src/core/gl_surface_qt.cpp
+index 0d143ee18..7e5792460 100644
+--- a/src/core/gl_surface_qt.cpp
++++ b/src/core/gl_surface_qt.cpp
+@@ -73,13 +73,6 @@
+ #include "ui/gl/gl_glx_api_implementation.h"
+ #include <dlfcn.h>
+ 
+-#ifndef QT_NO_OPENGL
+-#include <QOpenGLContext>
+-QT_BEGIN_NAMESPACE
+-Q_GUI_EXPORT QOpenGLContext *qt_gl_global_share_context();
+-QT_END_NAMESPACE
+-#endif
+-
+ #endif
+ 
+ #include "ozone/gl_surface_egl_qt.h"
+@@ -203,16 +196,10 @@ bool InitializeStaticGLBindings(GLImplementation implementation) {
+           reinterpret_cast<GLGetProcAddressProc>(
+               base::GetFunctionPointerFromNativeLibrary(library,
+                                                         "glXGetProcAddress"));
+-
+-#ifndef QT_NO_OPENGL
+       if (!get_proc_address) {
+-          // glx handle not loaded , fallback to qpa
+-          if (QOpenGLContext *context = qt_gl_global_share_context()) {
+-              get_proc_address = reinterpret_cast<gl::GLGetProcAddressProc>(
+-                          context->getProcAddress("glXGetProcAddress"));
+-          }
++          QFunctionPointer address = GLContextHelper::getGlXGetProcAddress();
++          get_proc_address = reinterpret_cast<gl::GLGetProcAddressProc>(address);
+       }
+-#endif
+       if (!get_proc_address) {
+           LOG(ERROR) << "glxGetProcAddress not found.";
+           base::UnloadNativeLibrary(library);
+-- 
+2.16.3
+
