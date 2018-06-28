@@ -1,6 +1,6 @@
-qtwebengine-opensource-src (5.11.0+dfsg-0neon) xenial; urgency=medium
+qtwebengine-opensource-src (5.11.1+dfsg-0neon) xenial; urgency=medium
 
-  * Release 5.11 to neon
+  * Release 5.11.1 to neon
 
  -- Bhushan Shah <bshah@kde.org>  Mon, 28 May 2018 05:15:20 +0000
 
