@@ -8,3 +8,5 @@ disable-last_commit_position.patch
 #icu60-no-aspirational-scripts.patch
 #icu60-uchar.patch
 #separate-argv.patch
+
+qtwebengine-wayland.patch
