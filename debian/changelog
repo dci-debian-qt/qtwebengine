@@ -1,8 +1,74 @@
-qtwebengine-opensource-src (5.11.1+dfsg-0neon) xenial; urgency=medium
+qtwebengine-opensource-src (5.11.2+dfsg-0neon) UNRELEASED; urgency=medium
 
-  * Release 5.11.1 to neon
+  [ Lisandro Damián Nicanor Pérez Meyer ]
+  * Depend upon:
+    - libicu-dev >= 59~ (Closes: #905596).
+    - libvpx >= 1.7.0~ (Closes: #905658).
+    This matches reality and allows easier backporting.
+    Thanks Andreas Ferber for the bug reports.
+  * Add ~ to various build dependencies versions in order to let the package be
+    backported.
 
- -- Bhushan Shah <bshah@kde.org>  Mon, 28 May 2018 05:15:20 +0000
+ -- Jonathan Riddell <jr@jriddell.org>  Thu, 20 Sep 2018 16:24:01 +0100
+
+qtwebengine-opensource-src (5.11.1+dfsg-5) unstable; urgency=medium
+
+  * Team upload.
+  * Add fix-gcc-8-i386.patch to solve an alignment issue on i386.
+  * Update symbols files with buildds' logs.
+
+ -- Lisandro Damián Nicanor Pérez Meyer <lisandro@debian.org>  Fri, 27 Jul 2018 10:28:56 -0300
+
+qtwebengine-opensource-src (5.11.1+dfsg-4) unstable; urgency=medium
+
+  * Add increase_decoderbuffer_kpaddingsize.patch to fix FTBFS with new FFmpeg
+    (Closes: #888366). Thanks *a lot* Sebastian Ramacher for the pointer.
+
+ -- Lisandro Damián Nicanor Pérez Meyer <lisandro@debian.org>  Thu, 26 Jul 2018 10:41:58 -0300
+
+qtwebengine-opensource-src (5.11.1+dfsg-3) unstable; urgency=medium
+
+  [ Dmitry Shachnev ]
+  * Exclude both non-free rx.lite.min.js and rx.lite.js from the tarball.
+
+  [ Simon Quigley ]
+  * Upload to Sid.
+
+ -- Simon Quigley <tsimonq2@ubuntu.com>  Wed, 25 Jul 2018 04:53:30 -0500
+
+qtwebengine-opensource-src (5.11.1+dfsg-2) experimental; urgency=medium
+
+  [ Dmitry Shachnev ]
+  * Update symbols files from buildds’ logs.
+  * Replace no-xterm-build.patch with more generic touch_files approach.
+  * Do not use rm -rf for removing files.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Thu, 12 Jul 2018 17:03:13 +0300
+
+qtwebengine-opensource-src (5.11.1+dfsg-1) experimental; urgency=medium
+
+  [ Simon Quigley ]
+  * New upstream release.
+  * Update debhelper compat to 11, no changes needed.
+  * Update build dependencies to 5.11.1.
+  * Update symbols from amd64 build logs.
+  * Bump Standards-version to 4.1.5, no changes needed.
+
+  [ Dmitry Shachnev ]
+  * Drop patches, applied in the new release:
+    - icu60-no-aspirational-scripts.patch
+    - icu60-uchar.patch
+    - separate-argv.patch
+  * Rebase and refresh other patches.
+  * Drop three paths from Files-Excluded that have been removed upstream.
+  * Add icu:icuuc to dependencies of jumbo_component("base").
+  * Update symbols files from the current amd64 build log.
+  * Fix or override the remaining source-is-missing warnings.
+    - Add a patch to exclude xterm.{css,js} from the build process.
+  * Make sure that system libvpx library is used (closes: #903126).
+    Thanks to Jonas Smedegaard for the patch.
+
+ -- Dmitry Shachnev <mitya57@debian.org>  Wed, 11 Jul 2018 14:12:09 +0300
 
 qtwebengine-opensource-src (5.10.1+dfsg-4) unstable; urgency=medium
 

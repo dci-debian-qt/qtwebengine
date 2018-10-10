@@ -33,6 +33,8 @@ small_architectures := armhf mipsel
 no_gold_architectures := arm64 armhf mipsel
 
 config_args = -proprietary-codecs \
+              -feature-webengine-system-libvpx \
+              -system-ffmpeg \
               -system-opus \
               -system-webp
               #-system-webengine-icu # neon: xenial icu version is too old
@@ -47,6 +49,8 @@ touch_files = src/3rdparty/chromium/third_party/analytics/google-analytics-bundl
 	      src/3rdparty/chromium/third_party/WebKit/Source/devtools/front_end/gonzales/gonzales-scss.js \
 	      src/3rdparty/chromium/third_party/WebKit/Source/devtools/front_end/network/NetworkConfigView.js \
 	      src/3rdparty/chromium/third_party/WebKit/Source/devtools/front_end/settings/EditFileSystemView.js \
+	      src/3rdparty/chromium/third_party/WebKit/Source/devtools/front_end/terminal/xterm.js/build/xterm.css \
+	      src/3rdparty/chromium/third_party/WebKit/Source/devtools/front_end/terminal/xterm.js/build/xterm.js \
 	      src/3rdparty/chromium/ui/webui/resources/js/jstemplate_compiled.js
 
 %:
@@ -54,21 +58,21 @@ touch_files = src/3rdparty/chromium/third_party/analytics/google-analytics-bundl
 
 override_dh_auto_clean:
 	dh_auto_clean
-	rm -rf .qmake.cache
-	rm -rf config.tests/.qmake.cache
-	rm -rf qtwebengine-config.h
+	rm -f .qmake.cache
+	rm -f config.tests/.qmake.cache
+	rm -f qtwebengine-config.h
 
 	rm -rf $(CURDIR)/test_root
 	rm -rf $(CURDIR)/docs
 	rm -rf $(CURDIR)/.local
-	rm -rf $(CURDIR)/src/3rdparty/chromium/third_party/jstemplate/jstemplate_compiled.js
-	rm -rf $(CURDIR)/src/3rdparty/chromium/third_party/mocha/mocha.js
-	rm -rf $(CURDIR)/examples/webenginewidgets/contentmanipulation/jquery*.js
-	rm -rf $(CURDIR)/examples/webenginewidgets/markdowneditor/resources/3rdparty/marked*.js
-	rm -rf $(CURDIR)/examples/webengine/recipebrowser/resources/pages/assets/3rdparty/marked*.js
-	
+	rm -f $(CURDIR)/src/3rdparty/chromium/third_party/jstemplate/jstemplate_compiled.js
+	rm -f $(CURDIR)/src/3rdparty/chromium/third_party/mocha/mocha.js
+	rm -f $(CURDIR)/examples/webenginewidgets/contentmanipulation/jquery*.js
+	rm -f $(CURDIR)/examples/webenginewidgets/markdowneditor/resources/3rdparty/marked*.js
+	rm -f $(CURDIR)/examples/webengine/recipebrowser/resources/pages/assets/3rdparty/marked*.js
+
 	for fname in $(touch_files); do \
-		rm -rf $(CURDIR)/$${fname}; \
+		rm -f $(CURDIR)/$${fname}; \
 	done
 
 override_dh_auto_configure:
@@ -125,7 +129,7 @@ endif
 
 	# Make ld not cache the symbol tables of input files in memory to avoid memory exhaustion during the linking phase.
 	echo "QMAKE_LFLAGS += -Wl,--no-keep-memory" >> .qmake.conf
-	
+
 	# Missing hardening flag detected by blhc
 	echo "QMAKE_LFLAGS += -Wl,-z,now" >> .qmake.conf
 
@@ -149,8 +153,9 @@ endif
 	yui-compressor --type js "examples/webenginewidgets/markdowneditor/resources/3rdparty/marked.js" -o "examples/webenginewidgets/markdowneditor/resources/3rdparty/marked.min.js"
 	yui-compressor --type js "examples/webengine/recipebrowser/resources/pages/assets/3rdparty/marked.js" -o "examples/webengine/recipebrowser/resources/pages/assets/3rdparty/marked.min.js"
 
-	
-	for fname in $(touch_files); do \
+
+	set -ex; for fname in $(touch_files); do \
+		mkdir -p $(CURDIR)/$$(dirname $${fname}); \
 		touch $(CURDIR)/$${fname}; \
 	done
 
@@ -186,7 +191,7 @@ override_dh_link:
 		usr/share/javascript/marked/marked.min.js usr/lib/$(DEB_HOST_MULTIARCH)/qt5/examples/webenginewidgets/markdowneditor/resources/marked.min.js
 	dh_link --package=qtwebengine5-dev-tools \
 		usr/lib/qt5/bin/qwebengine_convert_dict usr/lib/$(DEB_HOST_MULTIARCH)/qt5/bin/qwebengine_convert_dict
-	
+
 	dh_link --remaining-packages
 
 override_dh_auto_test-arch:
