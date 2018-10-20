@@ -1,5 +1,8 @@
 qtwebengine-opensource-src (5.11.2+dfsg-3) UNRELEASED; urgency=medium
 
+  [ Dmitry Shachnev ]
+  * Drop libsrtp-dev build-dependency (closes: #910300). The code uses a
+    private copy of SRTP2 because it needs its private headers.
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sat, 20 Oct 2018 14:45:14 +0300
 
