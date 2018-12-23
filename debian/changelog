@@ -1,4 +1,31 @@
-qtwebengine-opensource-src (5.11.2+dfsg-2) UNRELEASED; urgency=medium
+qtwebengine-opensource-src (5.11.3+dfsg-1) UNRELEASED; urgency=medium
+
+  [ Lisandro Damián Nicanor Pérez Meyer ]
+  * New upstream release.
+    - Security fixes from Chromium up to version 70.0.3538.102, including:
+      - CVE-2018-16066
+      - CVE-2018-16067
+      - CVE-2018-16068
+      - CVE-2018-16070
+      - CVE-2018-16071
+      - CVE-2018-16072
+      - CVE-2018-16073
+      - CVE-2018-16074
+      - CVE-2018-16076
+      - CVE-2018-16077
+      - CVE-2018-16083
+      - CVE-2018-16085
+      - CVE-2018-17462
+      - CVE-2018-17466
+      - CVE-2018-17468
+      - CVE-2018-17468
+      - CVE-2018-17469
+      - CVE-2018-17470
+      - CVE-2018-17471
+      - CVE-2018-17473
+      - CVE-2018-17474
+      - CVE-2018-17476
+      - CVE-2018-17478
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sun, 23 Dec 2018 19:57:53 -0300
 
