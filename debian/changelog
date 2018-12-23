@@ -27,6 +27,7 @@ qtwebengine-opensource-src (5.11.3+dfsg-1) UNRELEASED; urgency=medium
       - CVE-2018-17476
       - CVE-2018-17478
   * Bump Qt build dependencies.
+  * Update symbols files with buildds' logs.
 
  -- Debian Qt/KDE Maintainers <debian-qt-kde@lists.debian.org>  Sun, 23 Dec 2018 19:57:53 -0300
 
